@@ -1,0 +1,2 @@
+#org.springframework.data.jdbc.repository.config.DialectResolver$JdbcDialectProvider=com.guptamedia.hiring.analytics.jdbc.sqlite.SQLiteDialectProvider
+org.springframework.data.jdbc.repository.config.DialectResolver$JdbcDialectProvider=org.komamitsu.spring.data.sqlite.SqliteDialectProvider
