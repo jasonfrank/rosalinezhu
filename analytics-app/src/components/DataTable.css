@@ -1,0 +1,139 @@
+/* DataTable Container */
+.data-table-container {
+    padding: 20px;
+}
+
+.data-table-title {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Table Styles */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Table Header */
+.data-table thead {
+    background-color: #f8f9fa;
+}
+
+.data-table th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Table Body */
+.data-table tbody tr {
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.2s ease;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.data-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.data-table td {
+    padding: 12px;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+/* Font Styles */
+.data-table td.monospace {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+.data-table td.bold {
+    font-weight: 500;
+}
+
+/* Color Classes */
+.data-table td.text-primary {
+    color: #0066cc;
+}
+
+.data-table td.text-success {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.data-table td.text-danger {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.data-table td.text-warning {
+    color: #ffc107;
+    font-weight: 500;
+}
+
+.data-table td.text-info {
+    color: #17a2b8;
+    font-weight: 500;
+}
+
+/* Note Section */
+.data-table-note {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #6c757d;
+    border-left: 4px solid #007bff;
+}
+
+.data-table-note strong {
+    color: #495057;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .data-table-container {
+        padding: 10px;
+        overflow-x: auto;
+    }
+    
+    .data-table {
+        min-width: 600px;
+    }
+    
+    .data-table th,
+    .data-table td {
+        padding: 8px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Loading State */
+.data-table-loading {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Empty State */
+.data-table-empty {
+    text-align: center;
+    padding: 40px;
+    color: #6c757d;
+}

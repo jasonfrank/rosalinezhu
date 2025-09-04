@@ -1,0 +1,30 @@
+/* Header styling */
+.header {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #007bff;
+}
+
+/* Detail section */
+#detail {
+    padding: 20px;
+}
