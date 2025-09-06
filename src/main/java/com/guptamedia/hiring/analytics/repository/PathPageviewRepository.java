@@ -13,19 +13,21 @@ public interface PathPageviewRepository extends JpaRepository<PathPageview, Long
         SELECT h.hostname, 
                p.page_path, 
                p.pageviews, 
-               (p.pageviews * 1.0 / h.pageviews) * h.visits 
+               (p.pageviews * 1.0 / h.pageviews) * h.visits as estimated_visits
         FROM host_pageviews h 
         JOIN path_pageviews p ON h.hostname = p.domain
+        LIMIT 10 
         """, nativeQuery = true)
     List<Object[]> findPagePathAnalytics();
 
     @Query(value = """
         SELECT h.hostname, 
-               SUM(p.pageviews), 
-               SUM((p.pageviews * 1.0 / h.pageviews) * h.visits) 
+               SUM(p.pageviews) as total_pageviews, 
+               SUM((p.pageviews * 1.0 / h.pageviews) * h.visits) as estimated_visits 
         FROM host_pageviews h 
         JOIN path_pageviews p ON h.hostname = p.domain 
         GROUP BY h.hostname, h.pageviews, h.visits
+        LIMIT 10
         """, nativeQuery = true)
     List<Object[]> findDomainAnalytics();
 }

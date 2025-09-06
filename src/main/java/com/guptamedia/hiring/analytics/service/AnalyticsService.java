@@ -21,8 +21,8 @@ public class AnalyticsService {
             .map(row -> new PageAnalyticsDto(
                 (String) row[0],
                 (String) row[1],
-                (Long) row[2],
-                (Double) row[3]
+                ((Number) row[2]).longValue(),
+                ((Number) row[3]).doubleValue()
             ))
             .collect(Collectors.toList());
     }
@@ -32,8 +32,8 @@ public class AnalyticsService {
             .stream()
             .map(row -> new DomainAnalyticsDto(
                 (String) row[0],
-                (Long) row[1],
-                (Double) row[2]
+                ((Number) row[1]).longValue(),
+                ((Number) row[2]).doubleValue()
             ))
             .collect(Collectors.toList());
     }
