@@ -1,46 +1,91 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useState } from 'react';
+import axios from 'axios';
 import DataTable from "../components/DataTable";
 import './pages.css';
 
 export default function Pages() {
     const [viewType, setViewType] = useState('pages'); // 'pages' or 'domains'
+    const [pagePathData, setPagePathData] = useState(null);
+    const [domainData, setDomainData] = useState(null);
+    const [pagePathLoaded, setPagePathLoaded] = useState(false);
+    const [domainLoaded, setDomainLoaded] = useState(false);
+    const [error, setError] = useState(null);
     
-    // Mock data for pages CSV (top-10000-pages-and-screens-30-days.csv)
-    const pagesData = [
-        ["page_title", "domain", "pagePath", "pageviews"],
-        ["National Institute of Standards and Technology | NIST", "time.gov", "/", 98638933],
-        ["National Institute of Standards and Technology | NIST", "www.time.gov", "/", 93716505],
-        ["NWS Radar", "radar.weather.gov", "/", 17190773],
-        ["USPS.com® - USPS Tracking® Results", "tools.usps.com", "/go/trackconfirmaction_input", 15283627],
-        ["Search Public Sex Offender Registries | Dru Sjodin National Sex Offender Public Website", "www.nsopw.gov", "/search-public-sex-offender-registries", 15196221]
-    ];
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize] = useState(15);
+
+    const fetchPagePathData = async (page = 0) => {
+        setError(null);
+
+        try {
+            const response = await axios.get(`http://localhost:8080/api/analytics/pages?page=${page}&size=${pageSize}`);
+            const apiData = response.data;
+            
+            setPagePathData(apiData);
+            setPagePathLoaded(true);
+        } catch (err) {
+            console.error('Error fetching pages data:', err);
+            setError('Failed to fetch pages data from server.');
+        }
+    };
+
+    const fetchDomainData = async (page = 0) => {
+        setError(null);
+
+        try {
+            const response = await axios.get(`http://localhost:8080/api/analytics/domain?page=${page}&size=${pageSize}`);
+            const apiData = response.data;
+
+            setDomainData(apiData);
+            setDomainLoaded(true);
+        } catch (err) {
+            console.error('Error fetching domain data:', err);
+            setError('Failed to fetch domain data from server.');
+        }
+    };
+
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+        if (viewType === 'pages') {
+            fetchPagePathData(newPage);
+        } else {
+            fetchDomainData(newPage);
+        }
+    };
+
+    const handleViewTypeChange = (newViewType) => {
+        setViewType(newViewType);
+        setCurrentPage(0); // Reset to first page when switching views
+    };
+
+    useEffect(() => {
+        if (viewType === 'pages' && !pagePathLoaded) {
+            fetchPagePathData(0);
+        } else if (viewType === 'domains' && !domainLoaded) {
+            fetchDomainData(0);
+        }
+    }, [viewType]);
     
-    // Mock data for domains CSV (top-10000-domains-30-days.csv)
-    const domainsData = [
-        ["hostname", "pageviews", "visits"],
-        ["tools.usps.com", 134170291, 94863978],
-        ["pubmed.ncbi.nlm.nih.gov", 84037842, 29296184],
-        ["ceac.state.gov", 74401100, 7439251],
-        ["www.ncbi.nlm.nih.gov", 50592140, 35300488],
-        ["secure.login.gov", 50245956, 20310276]
-    ];
-    
-    const currentData = viewType === 'pages' ? pagesData : domainsData;
+    const currentData = viewType === 'pages' ? pagePathData : domainData;
     const title = viewType === 'pages' ? 'Government Pages Views' : 'Government Domain Views';
+    const isLoading = viewType === 'pages' ? !pagePathLoaded : !domainLoaded;
     
     return (
         <div>
+            {error && <div className="error-message">{error}</div>}
+            
             {/* Toggle Buttons */}
             <div className="toggle-container">
                 <button 
-                    onClick={() => setViewType('pages')}
+                    onClick={() => handleViewTypeChange('pages')}
                     className={`toggle-button ${viewType === 'pages' ? 'active' : ''}`}
                 >
                     Page Path
                 </button>
                 <button 
-                    onClick={() => setViewType('domains')}
+                    onClick={() => handleViewTypeChange('domains')}
                     className={`toggle-button ${viewType === 'domains' ? 'active' : ''}`}
                 >
                     Domain
@@ -50,8 +95,16 @@ export default function Pages() {
             <DataTable 
                 title={title}
                 data={currentData}
+                dataType={viewType}
+                loading={isLoading}
+                pagination={true}
+                currentPage={currentData?.pageable?.pageNumber || currentPage}
+                totalPages={currentData?.totalPages || 0}
+                totalElements={currentData?.totalElements || 0}
+                pageSize={pageSize}
+                onPageChange={handlePageChange}
                 showNote={true}
-                noteText={`Showing top ${viewType} data from the last 30 days.`}
+                noteText={`Showing ${viewType} data from the last 30 days.`}
             />
         </div>
     );
